@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      0.1
-// @description  Translate RES settings console from English to Japanese.
+// @version      0.1.1
+// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します
 // @author       kusotool
 // @include      http://www.reddit.com/*
 // @include      https://www.reddit.com/*
 // @grant        none
+// @license      GNU General Public License version 3 or later
 // ==/UserScript==
-
-
+//
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
 //	the Free Software Foundation, either version 3 of the License, or
@@ -22,13 +22,14 @@
 //
 //	You should have received a copy of the GNU General Public License
 //	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+//
 
 var translated = false;
 var t = [];  //translate data
 var rt = [
     new regr(/Display expander for ([\w.]*)/, "$1の展開ボタンを表示する。"),
-    new regr(/[Ss]how "([\w.]*)" link in subreddit manager/, "トップバーに[$1]を表示する。")
+    new regr(/[Ss]how "([\w.]*)" link in subreddit manager/, "トップバーに[$1]を表示する。"),
+    new regr(/Open link #(\d{1,2}) within comment./, "[$1]番目のリンクを開く。")
 ];
 
 function E(id){
@@ -51,16 +52,13 @@ function reg(arrayData){
         if(!t[l] && t[l] !== ""){
             t[l] = r;
         }
-        else{
-            console.log("already registered t[\""+l+"\"]=\""+t[l]+"\" (r=\""+r+"\")");
-        }
     }
 }
 
 function GetActiveTab(){
     var e = document.getElementsByTagName("li");
     for(var i = 0; i < e.length; i++){
-        if(/active/.test(e[i].getAttribute("class"))){
+        if(/active/.test(e[i].getAttribute("class")) && /Menu-/.test(e[i].id)){
             return e[i].id;
         }
     }
@@ -86,7 +84,7 @@ function TranslateRightPane(e){
             e.nodeValue = t[e.nodeValue];
         }
         else{
-            for(var i in rt){
+            for(var i = 0; i < rt.length; i++){
                 if(rt[i].regex.test(e.nodeValue)){
                     var s = "" + e.nodeValue;
                     e.nodeValue = s.replace(rt[i].regex, rt[i].replace);
@@ -396,7 +394,7 @@ function init(){
         " When browsing subreddit/multi-subreddit ",
         "サブレディットまたはマルチレディットを見るとき",
         "Adds a Spam button to posts for easy reporting.",
-        "違反報告を簡単にするためにspamボタンを追加します。",
+        "違反報告を簡単にするためにspamボタン（rtsと表示）を追加します。各書き込みの下側のflairまたはgive goldの右隣に表示されます。",
         "Adds tags to posts based on which subreddit they were posted to.",
         "投稿されたサブレディットを元にタグを追加します。",
         "Set your subreddit-specific tags below. You can avoid double tagging a post that has already been tagged by using the \"doesntContain\" field. So, if you want to make sure that all ",
@@ -580,7 +578,7 @@ function init(){
         "Use go mode (require go mode before \"go to\" shortcuts are used, e.g. frontpage)",
         "goモードを使用する。（goモードに入らないと[goモード対応]の移動操作ができないようにする/offなら直接移動可）",
         "Enter \"go mode\" (next keypress goes to a location, e.g. frontpage)",
-        "goモードに入るキーを指定する。",
+        "goモードに入る。",
         "Show/hide commandline box",
         "コマンドラインボックスを開閉する。",
         "Hide link",
@@ -1024,11 +1022,26 @@ function init(){
         "Show the number (i.e. [+6]) rather than [vw]",
         "onの場合はタグの後ろにVote Weightの値（タグを付けるときに設定可能で0の場合は非表示）を表示する。offの場合は[vw]と表示する。",
         "Show the vote weight tooltip on hover (i.e. \"your votes for...\")",
-        "タグの後ろに表示されるvote weightにマウスオーバーした時ツールチップで表示する。"
+        "タグの後ろに表示されるvote weightにマウスオーバーした時ツールチップで表示する。",
+        
+        "ctrl-up arrow",
+        "ctrl + ↑",
+        "ctrl-down arrow",
+        "ctrl + ↓",
+        "ctrl-left arrow",
+        "ctrl + ←",
+        "ctrl-right arrow",
+        "ctrl + →",
+        "shift-up arrow",
+        "shift + ↑",
+        "shift-down arrow",
+        "shift + ↓",
+        "Open first link within comment.",
+        "[1]番目のリンクを開く。"
     ]);
 }
 
-function Translate(){
+function TranslateSettings(){
     if(translated) return;
     
     TranslateTab("Menu-Accounts", "アカウント", [
@@ -1159,10 +1172,21 @@ function Translate(){
     translated = true;
 }
 
+function TranslateKeyhelp(){
+    var e = E("keyHelp");
+    if(e.getAttribute("translated_ja") === "true") return;
+    TranslateRightPane(e);
+    e.setAttribute("translated_ja", "true");
+    setTimeout(start, 500);
+}
+
 function start(){
 	if(E("RESClose")){
-		setTimeout(Translate, 500);
+		setTimeout(TranslateSettings, 500);
 	}
+    else if(E("keyHelp")){
+		setTimeout(TranslateKeyhelp, 500);
+    }
 	else{
 		setTimeout(start, 500);
 	}
