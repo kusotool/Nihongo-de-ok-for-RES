@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      0.2.0
+// @version      0.2.1
 // @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v4.6.0対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
@@ -161,7 +161,7 @@ function TranslateSettings(){
     }
     
     TranslateCategory("About RES",    "RESについて"    );
-    TranslateCategory("My account",   "マイ アカウント");
+    TranslateCategory("My account",   "マイアカウント");
     TranslateCategory("Users",        "ユーザー"       );
     TranslateCategory("Comments",     "コメント"       );
     TranslateCategory("Submissions",  "サブミッション" );
@@ -394,7 +394,7 @@ function TranslateSettings(){
         ])
     );
     TranslateModule(
-        "userbarHider"        , "ユーザーバー非表示", TranslateData([
+        "userbarHider", "ユーザーバー非表示", TranslateData([
             "Hide the user bar (username, karma, preferences, etc.) in the top right corner. <br> Previously part of Style Tweaks",
             "画面右上のユーザーバー（ユーザー名・カルマ・個人設定などを表示）を隠す。以前はスタイル調整機能の一部でした。",
             "Visible ",
@@ -904,7 +904,7 @@ function TranslateSettings(){
         ])
     );
     TranslateModule(
-        "betteReddit", "ベター レディット", TranslateData([     
+        "betteReddit", "ベターレディット", TranslateData([     
             "Adds a number of interface enhancements to Reddit, such as \"full comments\" links, the ability to unhide accidentally hidden posts, and more",   
             "いくつかの操作性向上を行います。間違って隠してしまった全ての投稿を元に戻すなどの機能があります。",
             "Add \"full comments\" link to comment replies, etc.", 
@@ -1016,7 +1016,7 @@ function TranslateSettings(){
         ])
     );
     TranslateModule(
-        "stylesheet", "スタイルシート ローダー", TranslateData([
+        "stylesheet", "スタイルシートローダー", TranslateData([
             "Load stylesheets from other subreddits or load your own CSS snippets.",
             "他のサブレディット、または自分で用意したCSSを読み込むことができます。",
             "learn more",
@@ -1037,9 +1037,17 @@ function TranslateSettings(){
             "指定した場所 ",
             "Add Row",
             "行を追加",
+            "When browsing a subreddit, add the subreddit name as a class to the body.\n\n<br><br>For example, /r/ExampleSubreddit adds <code>body.res-r-examplesubreddit</code>",
+            "サブレディットを見ているとき、サブレディットの名前をbodyタグのclassに追加します。<br><br>例えば /r/ExampleSubreddit を見ているなら <code>body.res-r-examplesubreddit</code> が追加されます。",
+            "When browsing a multireddit, add the multireddit name as a class to the body.\n\n<br><br>For example, /u/ExampleUser/m/ExampleMulti adds <code>body.res-user-exampleuser-m-examplemulti</code>",
+            "マルチレディットを見ているとき、マルチレディットの名前をbodyタグのclassに追加します。<br><br>例えば /u/ExampleUser/m/ExampleMulti を見ているなら <code>body.res-user-exampleuser-m-examplemulti</code> が追加されます。",
+            "When browsing a user profile, add the username as a class to the body.\n\n<br><br>For example, /u/ExampleUser adds <code>body.res-user-exampleuser</code>",
+            "ユーザープロファイルを見ているとき、ユーザーの名前をbodyタグのclassに追加します。<br><br>例えば /u/ExampleUser を見ているなら <code>body.res-user-exampleuser</code> が追加されます。",
+            "When logged in, add your username as a class to the body.\n\n<br><br>For example, /u/ExampleUser adds <code>body.res-me-exampleuser</code>",
+            "ログインしている間、あなたのユーザー名をbodyタグのclassに追加します。例えばあなたが /u/ExampleUser なら <code>body.res-me-exampleuser</code> が追加されます。",
         ]),
         function() {
-            AddDescription("optionContainer-stylesheet-loadSubredditStylesheets").text("他のサブレディット、または自分で用意したCSSを読み込むことができます。（※この機能はgoldメンバーでなくても使用できます）");
+            AddDescription("optionContainer-stylesheet-loadSubredditStylesheets", "他のサブレディット、または自分で用意したCSSを読み込むことができます。（※この機能はgoldメンバーでなくても使用できます）");
         }
     );
     TranslateModule(
