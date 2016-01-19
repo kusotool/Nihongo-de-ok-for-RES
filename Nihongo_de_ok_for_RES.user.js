@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      0.2.1
+// @version      0.2.2
 // @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v4.6.0対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
@@ -29,7 +29,9 @@
 
 // Your code here...
 var resja_debug = false;
-var prev_href = "";
+var prev_url = "";
+var attr_translated = "translated_by_rest"
+var fTranslate = [];
 
 function TranslateCategory(en, jp) {
     var arrayTarget = document.getElementsByClassName("categoryButton");
@@ -47,12 +49,14 @@ function TranslateModule(en, jp, arrayRightPaneTranslateData, funcCustom) {
         var target = arrayTarget[i];
         if(target.getAttribute("data-module") === en){
             target.innerHTML = jp + "<br>　" + target.innerHTML;
+            fTranslate[en] = function(){
+                TranslateRightPane(arrayRightPaneTranslateData);
+                if(typeof(funcCustom) === "function") funcCustom();
+                prev_url = location.href;
+            };
             target.addEventListener("click", function() {
                 //そのまま呼び出すと翻訳後に上書きされるため、遅らせる
-                setTimeout(function(){
-                    TranslateRightPane(arrayRightPaneTranslateData);
-                    if(typeof(funcCustom) === "function") funcCustom();
-                },1);
+                setTimeout(fTranslate[en], 100);
             });
         }
     }
@@ -70,7 +74,12 @@ function Translate(e, td){
     if(!e){
         return;
     }
-    
+/*    
+    if(resja_debug) {
+        console.log("ih="+e.innerHTML);
+        console.log("nv="+e.nodeValue);
+    }
+*/    
     if(e.getAttribute && e.getAttribute("class") === "optionTitle"){
         Translate(e.nextSibling, td);
         return;
@@ -141,35 +150,59 @@ function AddDescription(id, text) {
     }
 }
 
-function ClickActiveModule() {
+function TranslateActiveModule() {
     var arrayTarget = document.getElementsByClassName("moduleButton");
     for(var i = 0; i < arrayTarget.length; i++) {
         var target = arrayTarget[i];
         var c = target.getAttribute("class").split(" ");
         for(var j = 0; j < c.length; j++){
             if(c[j] === "active") {
-                target.click();
+                //target.click();
+                var dm = fTranslate[target.getAttribute("data-module")];
+                if(typeof(dm) === "function") dm();
             }
         }
     }
-    
+}
+
+function IsTranslated(e) {
+    if(e && e.getAttribute) {
+        return(e.getAttribute(attr_translated) === "true");
+    }
+    else{
+        return true;
+    }
+}
+
+function MarkTranslated(e) {
+    if(e && e.setAttribute) {
+        e.setAttribute(attr_translated, "true");
+    }
+    else{
+        throw "Error on MarkTranslated";
+    }
 }
 
 function TranslateSettings(){
-    if(document.getElementById("RESConfigPanelModulesPane")){
-        if(document.getElementById("RESConfigPanelModulesPane").getAttribute("translated_ja") === "true") return;
+    var resconfpane = document.getElementById("RESConfigPanelModulesPane");
+    if(IsTranslated(resconfpane)) {
+        if(prev_url !== location.href && !location.href.match(/#!settings\/search\/.*/)){//RES tipsなどから移動してきた場合など、翻訳されてない場合に強制実行
+            TranslateActiveModule();
+            prev_url = location.href;
+        }
+        return;
     }
     
-    TranslateCategory("About RES",    "RESについて"    );
+    TranslateCategory("About RES",    "RESについて"   );
     TranslateCategory("My account",   "マイアカウント");
-    TranslateCategory("Users",        "ユーザー"       );
-    TranslateCategory("Comments",     "コメント"       );
-    TranslateCategory("Submissions",  "サブミッション" );
-    TranslateCategory("Subreddits",   "サブレディット" );
-    TranslateCategory("Appearance",   "見た目"         );
-    TranslateCategory("Browsing",     "ブラウジング"   );
-    TranslateCategory("Productivity", "生産性"         );
-    TranslateCategory("Core",         "コア"           );
+    TranslateCategory("Users",        "ユーザー"      );
+    TranslateCategory("Comments",     "コメント"      );
+    TranslateCategory("Submissions",  "サブミッション");
+    TranslateCategory("Subreddits",   "サブレディット");
+    TranslateCategory("Appearance",   "見た目"        );
+    TranslateCategory("Browsing",     "ブラウジング"  );
+    TranslateCategory("Productivity", "生産性"        );
+    TranslateCategory("Core",         "コア"          );
     
     Translate(document.getElementById("RESAllOptions"), TranslateData(["Show advanced options", "上級者向け設定を表示する"]));
     Translate(document.getElementById("noOptions"), TranslateData(["\n							There are no configurable options for this module.\n						", "この機能に他の設定はありません。"]));
@@ -236,7 +269,7 @@ function TranslateSettings(){
         function() {
             document.getElementById("resja_1").addEventListener("click", function() {
                 setTimeout(function() {
-                    ClickActiveModule();
+                    TranslateActiveModule();
                 }, 100);
             }, false);
         }
@@ -886,7 +919,7 @@ function TranslateSettings(){
         }
     );
     TranslateModule(
-        "subRedditTagger", "サブレディット タグ", TranslateData([  
+        "subRedditTagger", "サブレディットのタグ付け", TranslateData([  
             "Adds tags to posts based on which subreddit they were posted to.",
             "投稿されたサブレディットを元にタグを追加します。",
             "Set your subreddit-specific tags below. You can avoid double tagging a post that has already been tagged by using the \"doesntContain\" field. So, if you want to make sure that all ",
@@ -1565,19 +1598,18 @@ function TranslateSettings(){
         }
     );
     
-    ClickActiveModule();
+    TranslateActiveModule();
     document.getElementById("moduleOptionsSave").innerHTML = "設定を保存する";
     
-    if(document.getElementById("RESConfigPanelModulesPane")){
-        document.getElementById("RESConfigPanelModulesPane").setAttribute("translated_ja", "true");
-    }
+    MarkTranslated(resconfpane);
 }
 
 function TranslateKeyHelp(){
-    var e = document.getElementById("keyHelp");
-    if(e.getAttribute("translated_ja") === "true") return;
+    var keyhelp = document.getElementById("keyHelp");
+    if(IsTranslated(keyhelp)) return;
+    
     Translate(
-        e, TranslateData([
+        keyhelp, TranslateData([
             "Show help for keyboard shortcuts",
             "キーボードショートカットのヘルプを表示する。",
             "Enter \"go mode\" (next keypress goes to a location, e.g. frontpage)",
@@ -1727,21 +1759,84 @@ function TranslateKeyHelp(){
         ])
     );
     
-    e.setAttribute("translated_ja", "true");
+    MarkTranslated(keyhelp);
 }
 
-function start(){
-	if(document.getElementById("RESClose")){
+function TranslateDailyTip() {
+    var tip0 = document.getElementById("tip0");
+    if(IsTranslated(tip0)) return;
+    
+    Translate(
+        tip0, TranslateData([
+            "RES Tips and Tricks",
+            "RESの使い方のヒント",
+            "Back up your RES data!",
+            "RESの設定をバックアップしてください！",
+            "Welcome to RES. You can turn modules on and off, and configure settings for the modules using the gear icon link at the top right. For feature requests, or just help getting a question answered, be sure to subscribe to <a href=\"/r/Enhancement\">/r/Enhancement</a>.",
+            "RESへようこそ。右上の歯車アイコンから機能のon/offや設定を変更できます。機能の要望のため、答えてもらった質問を見るために /r/Enhancement を購読してください。",
+            "Click the tag icon next to a user to tag that user with any name you like - you can also color code the tag.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Users</td>\n<td>\n<a class=\"\" href=\"#!settings/userTagger\">User Tagger</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "ユーザー名の横にあるタグをクリックすることで、好きなタグを付けることができます。また、色を付けることもできます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ユーザー</td><td><a class=\"\" href=\"#!settings/userTagger\">ユーザーのタグ付け</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "If your RES data gets deleted or you move to a new computer, you can restore it from backup. <br><br><b>Firefox</b> especially sometimes loses your RES settings and data. <br><br><a href=\"/r/Enhancement/wiki/backing_up_res_settings\" target=\"_blank\">Learn where RES stores your data and settings</a><p></p>",
+            "RESの設定が消えたり新しいPCに移動したときは、設定をバックアップから復元することができます。<br><br><b>Firefox</b>では特にRESの設定が消えやすいです。<br><br><a href=\"/r/Enhancement/wiki/backing_up_res_settings\" target=\"_blank\">RESの設定とデータがどこにあるか確認しましょう</a>。<p>（※現在のバージョンでは、RES設定の <a href=\"#!settings/backupAndRestore\">バックアップと復元</a> から簡単に操作できます。）</p>",
+            "Don't forget to subscribe to <a href=\"/r/Enhancement\">/r/Enhancement</a> to keep up to date on the latest versions of RES or suggest features! For bug reports, submit to <a href=\"/r/RESIssues\">/r/RESIssues</a>",
+            "<a href=\"/r/Enhancement\">/r/Enhancement</a>を忘れずに購読して、RESの最新バージョンや機能の提案を見逃さないでください！　バグを報告するには<a href=\"/r/RESIssues\">/r/RESIssues</a>に投稿してください。",
+            "Don't want to see posts containing certain keywords? Want to filter out certain subreddits from /r/all? Try the filteReddit module!\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Subreddits,Submissions</td>\n<td>\n<a class=\"\" href=\"#!settings/filteReddit\">filteReddit</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "特定のキーワードを含んだ投稿を隠したいですか？　/r/allからフィルターしたいサブレディットがありますか？　filteRedditを試してみてください！<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>サブレディット・サブミッション</td><td><a class=\"\" href=\"#!settings/filteReddit\">filteReddit</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "Keyboard Navigation is one of the most underutilized features in RES. You should try it!\n<h2 class=\"keyboardNav\">\nKeyboard Navigation\n</h2>\n<table>\n<tbody><tr>\n<td><code>shift-/</code></td>\n<td>toggleHelp</td>\n</tr><tr>\n<td>&nbsp;</td>\n<td>Show help for keyboard shortcuts</td>\n</tr>\n</tbody></table>\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Browsing</td>\n<td>\n<a class=\"\" href=\"#!settings/keyboardNav\">Keyboard Navigation</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "キーボード操作はRESの中で最も活用されていない機能の一つです。ぜひ試してください！<h2 class=\"keyboardNav\">キーボード操作</h2><table><tbody><tr><td><code>shift-/</code></td><td>toggleHelp</td></tr><tr><td>&nbsp;</td><td>キーボードショートカットのヘルプを表示する</td></tr></tbody></table><h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ブラウジング</td><td><a class=\"\" href=\"#!settings/keyboardNav\">キーボード操作</a></td><td>&nbsp;</td></tr></tbody></table>",            
+            "Did you know you can configure the appearance of a number of things in RES? For example: keyboard navigation lets you configure the look of the \"selected\" box, and commentBoxes lets you configure the borders / shadows.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Browsing</td>\n<td>\n<a class=\"\" href=\"#!settings/keyboardNav\">Keyboard Navigation</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/keyboardNav/focusBGColor\">focusBGColor</a>\n</td>\n</tr>\n<tr>\n<td>Appearance,Comments</td>\n<td>\n<a class=\"\" href=\"#!settings/styleTweaks\">Style Tweaks</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/styleTweaks/commentBoxes\">commentBoxes</a>\n</td>\n</tr><tr>\n<td colspan=\"3\">Highlights comment boxes for easier reading / placefinding in large threads.</td>\n</tr>\n</tbody></table>",
+            "RESで見た目に関するいくつもの設定ができることをご存知ですか？　例えば、キーボード操作では選択中の項目の色を設定できます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ブラウジング</td><td><a class=\"\" href=\"#!settings/keyboardNav\">キーボード操作</a></td><td><a class=\"\" href=\"#!settings/keyboardNav/focusBGColor\">focusBGColor</a></td></tr><tr><td>見た目・コメント</td><td><a class=\"\" href=\"#!settings/styleTweaks\">スタイル調整</a></td><td><a class=\"\" href=\"#!settings/styleTweaks/commentBoxes\">commentBoxes</a></td></tr><tr><td colspan=\"3\">コメントボックスをハイライトして大きなスレッドで読みやすく・見つけやすくする。</td></tr></tbody></table>",
+            "Do you subscribe to a ton of subreddits? Give the subreddit tagger a try; it can make your homepage a bit more readable.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Subreddits</td>\n<td>\n<a class=\"\" href=\"#!settings/subRedditTagger\">Subreddit Tagger</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "大量のサブレディットを購読していますか？　サブレディットのタグ付けを試してみてください。それでフロントページがもう少し見やすくなります。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>サブレディット</td><td><a class=\"\" href=\"#!settings/subRedditTagger\">サブレディットのタグ付け</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "If you haven't tried it yet, Keyboard Navigation is great. Just hit ? while browsing for instructions.\n<h2 class=\"keyboardNav\">\nKeyboard Navigation\n</h2>\n<table>\n<tbody><tr>\n<td><code>shift-/</code></td>\n<td>toggleHelp</td>\n</tr><tr>\n<td>&nbsp;</td>\n<td>Show help for keyboard shortcuts</td>\n</tr>\n</tbody></table>\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Browsing</td>\n<td>\n<a class=\"\" href=\"#!settings/keyboardNav\">Keyboard Navigation</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "まだ使ったことがないのなら、キーボード操作は便利です。?キー（shift-/）を押せば使用法がわかります。<h2 class=\"keyboardNav\">キーボード操作</h2><table><tbody><tr><td><code>shift-/</code></td><td>ヘルプの表示/非表示</td></tr><tr><td>&nbsp;</td><td>キーボードショートカットのヘルプを表示する</td></tr></tbody></table><h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ブラウジング</td><td><a class=\"\" href=\"#!settings/keyboardNav\">キーボード操作</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "Roll over a user's name to get information about them such as their karma, and how long they've been a reddit user.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Users</td>\n<td>\n<a class=\"\" href=\"#!settings/userInfo\">User Tagger</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/userInfo/hoverInfo\">hoverInfo</a>\n</td>\n</tr>\n</tbody></table>",
+            "ユーザー名にマウスオーバーすることでそのアカウントの作成日やカルマを知ることができます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ユーザー</td><td><a class=\"\" href=\"#!settings/userInfo\">ユーザー情報</a></td><td><a class=\"\" href=\"#!settings/userInfo/hoverInfo\">hoverInfo</a></td></tr></tbody></table>",
+            "Roll over a user's name to get information about them such as their karma, and how long they've been a reddit user.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Users</td>\n<td>\n<a class=\"\" href=\"#!settings/userTagger\">User Tagger</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/userTagger/hoverInfo\">hoverInfo</a>\n</td>\n</tr>\n</tbody></table>",
+            "ユーザー名にマウスオーバーすることでそのアカウントの作成日やカルマを知ることができます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ユーザー</td><td><a class=\"\" href=\"#!settings/userInfo\">ユーザー情報</a></td><td><a class=\"\" href=\"#!settings/userInfo/hoverInfo\">hoverInfo</a></td></tr></tbody></table>（※原文ではリンク先が間違っているため修正しました）",
+            "Hover over the \"parent\" link in comments pages to see the text of the parent being referred to.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Comments</td>\n<td>\n<a class=\"\" href=\"#!settings/showParent\">Show Parent on Hover</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "コメントページで\"parent\"（親コメント）リンクにマウスオーバーすることで、そのコメントの親をポップアップで表示できます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>コメント</td><td><a class=\"\" href=\"#!settings/showParent\">親コメントポップアップ</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "You can configure the color and style of the User Highlighter module if you want to change how the highlights look.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Users,Appearance</td>\n<td>\n<a class=\"\" href=\"#!settings/userHighlight\">User Highlighter</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "ユーザーハイライトの色とスタイルは変更できます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>ユーザー または 見た目</td><td><a class=\"\" href=\"#!settings/userHighlight\">ユーザーハイライト</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "Not a fan of how comments pages look? You can change the appearance in the Style Tweaks module\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Appearance,Comments</td>\n<td>\n<a class=\"\" href=\"#!settings/styleTweaks\">Style Tweaks</a>\n</td>\n<td>\n&nbsp;\n</td>\n</tr>\n</tbody></table>",
+            "コメントページの見た目が気に入りませんか？　見た目はスタイル調整機能で変更できます。<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>見た目 または コメント</td><td><a class=\"\" href=\"#!settings/styleTweaks\">スタイル調整</a></td><td>&nbsp;</td></tr></tbody></table>",
+            "Don't like the style in a certain subreddit? RES gives you a checkbox to disable styles individually - check the right sidebar!",
+            "好みでない表示スタイルのサブレディットがありますか？　RESはサブレディットのスタイルを無効にできるボタンを用意しています。右のサイドバーを見てください！",
+            "Looking for posts by submitter, post with photos, or posts in IAmA form? Try out the comment navigator.",
+            "サブミッション投稿者の書き込み、画像のある投稿、IAmAの書き込みなどを探していますか？　コメントナビゲーターを使ってみてください。",
+            "Have you seen the <a href=\"/r/Dashboard\">RES Dashboard</a>? It allows you to do all sorts of great stuff, like keep track of lower traffic subreddits, and manage your <a href=\"/r/Dashboard#userTaggerContents\">user tags</a> and <a href=\"/r/Dashboard#newCommentsContents\">thread subscriptions</a>!",
+            "<a href=\"/r/Dashboard\">RESダッシュボード</a>を見たことがありますか？　ここでは流れの遅いサブレディットに注目したり、<a href=\"/r/Dashboard#userTaggerContents\">ユーザータグ</a>と<a href=\"/r/Dashboard#newCommentsContents\">スレッドの購読</a>を管理できます！",
+            "Sick of seeing these tips?  They only show up once every 24 hours, but you can disable that in the RES Tips and Tricks preferences.\n",
+            "このヒントを見飽きましたか？　これは24時間ごとにしか表示されませんが、RES設定のTips and Tricksで無効にできます。",
+            "Did you know that there is now a \"keep me logged in\" option in the Account Switcher? Turn it on if you want to stay logged in to Reddit when using the switcher!\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>My account</td>\n<td>\n<a class=\"\" href=\"#!settings/accountSwitcher\">Account Switcher</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/accountSwitcher/keepLoggedIn\">keepLoggedIn</a>\n</td>\n</tr><tr>\n<td colspan=\"3\">Keep me logged in when I restart my browser.</td>\n</tr>\n</tbody></table>",
+            "アカウント切り替え機能に \"keepLoggedIn\" という設定項目があるのを知っていましたか？　アカウント切り替え機能を使っていて、redditにログインしたままにしたいなら有効にしましょう！<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table><tbody><tr><td>マイアカウント</td><td><a class=\"\" href=\"#!settings/accountSwitcher\">アカウント切り替え</a></td><td><a class=\"\" href=\"#!settings/accountSwitcher/keepLoggedIn\">keepLoggedIn</a></td></tr><tr><td colspan=\"3\">ブラウザを再起動したとき、ログインしたままにする。</td></tr></tbody></table>",
+            "See that little [vw] next to users you've voted on?  That's their vote weight - it moves up and down as you vote the same user up / down.\n<h2 class=\"settingsPointer\">\n<span class=\"gearIcon\"></span> RES Settings\n</h2>\n<table>\n<tbody><tr>\n<td>Users</td>\n<td>\n<a class=\"\" href=\"#!settings/userTagger\">User Tagger</a>\n</td>\n<td>\n<a class=\"\" href=\"#!settings/userTagger/vwTooltip\">vwTooltip</a>\n</td>\n</tr><tr>\n<td colspan=\"3\">Show the vote weight tooltip on hover (i.e. \"your votes for...\")</td>\n</tr>\n</tbody></table>",
+            "投票したユーザーの横に[+1]などと表示してあるのが見えますか？　これは彼らのvote weight - その人に対する、あなたの投票の合計点です。（upvoteで+1、downvoteで-1）<h2 class=\"settingsPointer\"><span class=\"gearIcon\"></span> RES設定</h2><table>\n<tbody><tr><td>ユーザー</td><td><a class=\"\" href=\"#!settings/userTagger\">ユーザータグ</a></td><td><a class=\"\" href=\"#!settings/userTagger/vwTooltip\">vwTooltip</a></td></tr><tr><td colspan=\"3\">マウスオーバー時にvote weightの情報を表示する。（例えば \"your votes for...\"）</td></tr></tbody></table>",
+            "Show these tips once every 24 hours",
+            "このヒントを24時間ごとに表示する",
+            "Prev",
+            "前へ",
+            "Next",
+            "次へ",
+        ])
+    );
+    
+    MarkTranslated(tip0);
+}
+
+function start() {
+	if(document.getElementById("RESClose")) {
        TranslateSettings();
 	}
 
-    if(document.getElementById("keyHelp")){
+    if(document.getElementById("keyHelp")) {
 		TranslateKeyHelp();
     }
-/*    
-    if(E("tip0")){
-		TranslatePanel(E("tip0"));
+    
+    if(document.getElementById("tip0")) {
+		TranslateDailyTip();
     }
+/*
     if(E("RESNotifications")){
 		TranslatePanel(E("RESNotifications"));
     }
