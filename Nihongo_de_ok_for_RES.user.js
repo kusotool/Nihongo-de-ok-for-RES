@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      0.2.2
-// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v4.6.0対応）
+// @version      4.6.1.0
+// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v4.6.1対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
 // @include      https://*.reddit.com/*
@@ -276,25 +276,34 @@ function TranslateSettings(){
     );
     TranslateModule(
         "about", "RESについて", TranslateData([
-            "<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a> (<a target=\"_blank\" href=\"http://www.reddit.com/user/honestbleeps/\">/u/honestbleeps</a>) is the primary developer of RES.  Beyond that, there are a number of people who have contributed code, design and/or great ideas to RES.  <a target=\"_blank\" href=\"/r/Enhancement/w/about/team\">Read more about the RES team.</a>",
-            "<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a> (<a target=\"_blank\" href=\"http://www.reddit.com/user/honestbleeps/\">/u/honestbleeps</a>) がRESの主要な開発者です。また、たくさんの人がコード・デザイン・素晴らしいアイディアでRESに貢献してくれました。<a target=\"_blank\" href=\"/r/Enhancement/w/about/team\">RES開発チームについてはここを見てください</a>。",
             "Reddit Enhancement Suite is a collection of modules that makes browsing reddit a whole lot easier.",
             "Reddit Enhancement Suiteはredditを簡単に見られるようにする機能の集まりです。",
-            "Read more about what RES can do for you on the <a href=\"http://www.reddit.com/r/Enhancement/wiki\">/r/Enhancement wiki</a> or look over the <a href=\"http://www.reddit.com/r/Enhancement/faq\">Frequently Asked Questions</a>.",
-            "RESができることについては <a href=\"http://www.reddit.com/r/Enhancement/wiki\">/r/Enhancement wiki</a> または <a href=\"http://www.reddit.com/r/Enhancement/faq\">よくある質問</a> を見てください。",
-            "If something looks broken, <a href=\"http://www.reddit.com/r/RESissues/search?restrict_sr=on\">search in /r/RESissues</a> or <a href=\"http://www.reddit.com/r/RESIssues/submit\">post a bug report</a>.",
-            "何かおかしい所があったら <a href=\"http://www.reddit.com/r/RESissues/search?restrict_sr=on\">/r/RESissues を検索（英語）</a> するか <a href=\"http://www.reddit.com/r/RESIssues/submit\">バグを報告（英語）</a> してください。",
-            "If you have an idea or want to chat with other RES users, <a href=\"http://www.reddit.com/r/Enhancement/search?restrict_sr=on\">search in /r/Enhancement</a> or <a href=\"http://www.reddit.com/r/Enhancement/submit\">submit a feature request or discussion</a>.",
-            "何か考えがあったり、他のRESユーザーとチャットがしたいなら <a href=\"http://www.reddit.com/r/Enhancement/search?restrict_sr=on\">/r/Enhancement を検索</a> または <a href=\"http://www.reddit.com/r/Enhancement/submit\">要望や話し合いをしてください</a>。",            
-            "If you'd like to contribute code to RES, check out <a href=\"https://github.com/honestbleeps/Reddit-Enhancement-Suite\" target=\"_blank\">RES on GitHub</a>.",
-            "RESにコードを提供したい場合は <a href=\"https://github.com/honestbleeps/Reddit-Enhancement-Suite\" target=\"_blank\">GitHubで公開中のRES</a> を見てください。",
-            "License: Reddit Enhancement Suite is released under the <a target=\"_blank\" href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GPL v3.0</a>.",
-            "ライセンス：Reddit Enhancement Suite は <a target=\"_blank\" href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GPL v3.0</a> の下で公開されます。",
-            "<strong>Note:</strong> Reddit Enhancement Suite will check, at most once a day, to see if a new version is available.  No data about you is sent to me nor is it stored.",
-            "<strong>注意：</strong>Reddit Enhancement Suite は一日に一回、最新バージョンがあるか確認します。個人情報を送信したり保存されることはありません。",
+            "Quickly customize RES with various presets.",
+            "プリセット：RESを素早く設定します。",
+            "Back up and restore your RES settings.",
+            "バックアップ：あなたのRES設定を保存・復元します。",
+            "Find RES settings.",
+            "設定を検索：RESの設定項目を見つけます。",
+            "Read the latest at /r/RESAnnouncements.",
+            "アナウンス：最新情報を /r/RESAnnouncements で確認します。",
+            "Support further RES development.",
+            "寄付：送金してRESの開発を支援します。",
+            "If something isn't working right, visit /r/RESissues for help.",
+            "バグ：もし正しく動作していないなら /r/RESissues で助けを求めてください。",
+            "If you have an idea for RES or want to chat with other users, visit /r/Enhancement.",
+            "提案：RESへの要望や、他のRESユーザーとチャットをするには /r/Enhancement を訪れてください。",
+            "Learn more about RES on the /r/Enhancement wiki.",
+            "よくある質問：RESについてさらに知るために /r/Enhancement wikiに移動します。",
+            "You can improve RES with your code, designs, and ideas! RES is an open-source project on GitHub.",
+            "開発：あなたのコード、デザイン、アイデアでRESをより良くすることができます！　RESはGitHub上で公開されているオープンソースプロジェクトです。",
+            "<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a> (<a target=\"_blank\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) and a slew of community members have contributed code, design and/or great ideas to RES.",
+            "貢献者：<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a>氏 (<a target=\"_blank\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) とコミュニティのメンバーがRESのためにコード・デザイン・素晴らしいアイデアを提供してくれました。",
+            "Read about RES's privacy policy.",
+            "プライバシー：RESのプライバシーポリシーを確認します。",
+            "Reddit Enhancement Suite is released under the GPL v3.0 license.",
+            "ライセンス：Reddit Enhancement Suiteのライセンス（GPL v3.0）を読みます。",
         ])
-    );
-    TranslateModule(
+    );    TranslateModule(
         "RESTips", "RESの便利な使い方", TranslateData([
             "Adds tips/tricks help to RES console",
             "RESの便利な使い方を表示します。",
@@ -701,9 +710,8 @@ function TranslateSettings(){
     );
     TranslateModule(
         "saveComments", "コメント保存", TranslateData([  
-            "	You can save comments with RES: click the <em>save-RES</em> button below the comment. You can view 	these comments on your user page under the \"saved - RES\" tab (reddit.com/user/MyUsername/saved#comments). 	If you use <a class=\"\" href=\"#!settings/keyboardNav\">Keyboard Navigation</a>, you can press . 	to open the RES command line, then type in <code>me/sc</code> to see saved-RES comments. 	<br><br>	Saving with RES saves a comment locally in your browser. This means that you can see the comment you saved 	<i>as it looked when you saved it</i>, even if it is later edited or deleted. 	You can save comments with RES if you are not logged in, or if you are logged in to any account—all the 	comments will be visible in one location. You will only be able to view saved RES comments on whichever browser	you have RES istalled on.	<br><br>		When saving comments with reddit, you must be logged into an account; the comment is saved specifically for that account;	it won't be shown if you switch to a different account or log out. You can view these comments whenever you are logged into	the reddit account you saved them from, including on other browsers or devices.  	<br><br>		Visually, saving comments with reddit looks the same as saving with RES—but the text is not saved locally,	so the saved comment text shows the <i>current</i> state of the comment. If the comment has been edited or deleted 	since you saved it, the text that displays on your account's \"saved\" page will look different then it looked when you saved it.	<br><br>		If you have <a href=\"/gold/about\">reddit gold</a> on an account, you can add a category/tag to comments you have saved 	with reddit, then filter saved comments/posts by category. (You cannot sort or filter comments saved with RES.) 	",
-            //"RESを使ってコメントを保存することができます：コメントの下にある <em>save-RES</em> ボタンをクリックしてください。保存したコメントはユーザーページの\"saved - RES\"タブ(reddit.com/user/MyUsername/saved#comments)で見ることができます。 <a class=\"\" href=\"#!settings/keyboardNav\">キーボード操作</a> が有効なら . （ドット）を押してコマンドラインを出した後に <code>me/sc</code> と入力することでアクセスできます。<br><br>RESを使って保存したコメントはブラウザに保存されます。つまり保存したコメントは、後で編集や削除されたとしても、保存したときの状態で診ることができます。RESでの保存はログインしていなくても、またどんなアカウントでログインしていても全てのコメントが一ヶ所で閲覧できます。RESで保存したコメントを見るには、保存時と同じPC・同じブラウザである必要があります。<br><br>redditの機能でコメントを保存するときは、アカウントに保存されるのでログインしておく必要があります。サーバー側に保存されるので他のデバイスやブラウザでもコメントを保存したユーザーでログインすれば読むことができます。コメントを保存したときとは別のアカウントでログインしたり、ログアウトした場合には見ることができません。コメントが編集されたり削除された場合は、保存したコメントもその影響を受けます。（コメントの内容ではなく、リンクを保存していると考えてください）アカウントを持っている場合は、そのアカウントで保存したコメントにカテゴリ・タグを追加することができ、それを利用してフィルタすることができます。（RESを使って保存したコメントではできません）",
-            "RESを使ってコメントを保存することができます。コメントの下にある<em>save-RES</em>ボタンをクリックすると保存され、\"saved - RES\"タブ(reddit.com/user/MyUsername/saved#comments)で見ることができます。<a class=\"\" href=\"#!settings/keyboardNav\">キーボード操作</a>が有効であれば場合は . （ドット）を押してコマンドラインを出した後 <code>me/sc</code> と入力することでも見ることができます。<br><br>RESを使って保存したコメントはブラウザに保存されるので保存時の環境（同じPC、同じブラウザ、RESがインストール済）でなければ読めません。しかしコメントが編集されたり削除されても保存時の状態が維持され、redditにログインしていなくても保存したり読んだりできます。<br><br>redditの機能でコメントを保存するにはログインしておく必要があります。サーバー側に保存されるので他のデバイスやブラウザからでもコメントを保存したユーザーでログインすれば読むことができます。コメントが編集されたり削除された場合は、保存したコメントもその影響を受けます。（コメントの内容ではなく、リンクを保存していると考えてください）<br><br>reddit goldアカウントを持っている場合は、そのアカウントで保存したコメントにカテゴリ・タグを追加することができ、それを利用してフィルタすることができます。（RESを使って保存したコメントではできません）",
+            "	You can save comments with RES: click the <em>save-RES</em> button below the comment. You can view 	these comments on your user page under the \"saved - RES\" tab (reddit.com/user/MyUsername/saved#comments). 	If you use <a class=\"\" href=\"#!settings/keyboardNav\" title=\"RES Settings > Keyboard Navigation\">Keyboard Navigation</a>, you can press . 	to open the RES command line, then type in <code>me/sc</code> to see saved-RES comments. 	<br><br>	Saving with RES saves a comment locally in your browser. This means that you can see the comment you saved 	<i>as it looked when you saved it</i>, even if it is later edited or deleted. 	You can save comments with RES if you are not logged in, or if you are logged in to any account—all the 	comments will be visible in one location. You will only be able to view saved RES comments on whichever browser	you have RES istalled on.	<br><br>		When saving comments with reddit, you must be logged into an account; the comment is saved specifically for that account;	it won't be shown if you switch to a different account or log out. You can view these comments whenever you are logged into	the reddit account you saved them from, including on other browsers or devices.  	<br><br>		Visually, saving comments with reddit looks the same as saving with RES—but the text is not saved locally,	so the saved comment text shows the <i>current</i> state of the comment. If the comment has been edited or deleted 	since you saved it, the text that displays on your account's \"saved\" page will look different then it looked when you saved it.	<br><br>		If you have <a href=\"/gold/about\">reddit gold</a> on an account, you can add a category/tag to comments you have saved 	with reddit, then filter saved comments/posts by category. (You cannot sort or filter comments saved with RES.) 	",
+            "RESを使ってコメントを保存することができます。コメントの下にある<em>save-RES</em>ボタンをクリックすると保存され、\"saved - RES\"タブ(reddit.com/user/MyUsername/saved#comments)で見ることができます。<a class=\"\" href=\"#!settings/keyboardNav\" title=\"RES設定 > キーボード操作\">キーボード操作</a>が有効であれば場合は . （ドット）を押してコマンドラインを出した後 <code>me/sc</code> と入力することでも見ることができます。<br><br>RESを使って保存したコメントはブラウザに保存されるので保存時の環境（同じPC、同じブラウザ、RESがインストール済）でなければ読めません。しかしコメントが編集されたり削除されても保存時の状態が維持され、redditにログインしていなくても保存したり読んだりできます。<br><br>redditの機能でコメントを保存するにはログインしておく必要があります。サーバー側に保存されるので他のデバイスやブラウザからでもコメントを保存したユーザーでログインすれば読むことができます。コメントが編集されたり削除された場合は、保存したコメントもその影響を受けます。（コメントの内容ではなく、リンクを保存していると考えてください）<br><br>reddit goldアカウントを持っている場合は、そのアカウントで保存したコメントにカテゴリ・タグを追加することができ、それを利用してフィルタすることができます。（RESを使って保存したコメントではできません）",
         ])
     );
     TranslateModule(
@@ -1030,6 +1038,12 @@ function TranslateSettings(){
             "投稿やコメントが選択されたとき、特別な見た目とツールを表示します。",
             "Automatically select the topmost element for keyboard navigation on window scroll",
             "キーボード操作時、ウィンドウがスクロールしたら自動的に一番上の項目を選択する。",
+            "Automatically select a post/comment when the page loads",
+            "ページを読み込んだ時、投稿/コメントを自動的に選択する",
+            "Automatically select the last thing you had selected",
+            "最後にあなたが選択した項目を自動的に選択する",
+            "Automatically scroll to the post/comment that is selected when the page loads",
+            "ページを読み込んだ時、選択されている投稿/コメントまで自動でスクロールする。",
             "Select a link or comment when clicked with the mouse",
             "マウスでクリックしたリンクやコメントを選択する。",
             "Set a background color to highlight the currently focused element", 
