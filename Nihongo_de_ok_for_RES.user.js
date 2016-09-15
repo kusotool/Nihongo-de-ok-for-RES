@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      5.0.1.1
-// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v5.0.1対応）
+// @version      5.0.2.0
+// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v5.0.2対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
 // @include      https://*.reddit.com/*
@@ -393,7 +393,7 @@ function TranslateSettings(){
     Translate(document.getElementById("noOptions"), TranslateData(["There are no configurable options for this module.", "この機能に他の設定はありません。"]));
     Translate(document.getElementById("keyCodeModal"), TranslateData(["Press a key (or combination with shift, alt and/or ctrl) to assign this action.", "キー（shift, alt, ctrl から一つまたは複数の同時押しも可）を登録できます"]));
     Translate(document.getElementById("alert_message"), TranslateData(["<div id=\"alert_message\" style=\"display: block;\"><div><p>Restoring a .resbackup file will <strong>permanently</strong> overwrite your current settings. Are you sure you want to do this?</p></div><input type=\"button\" value=\"confirm\" class=\"button-right\"><input type=\"button\" value=\"cancel\" class=\"button-right\"></div>", "きます"]));
-    Translate(document.getElementById("RESConsoleVersionDisplay"), TranslateData(["*", "(+unofficial Japanese translation v5.0.1.1)"]));
+    Translate(document.getElementById("RESConsoleVersionDisplay"), TranslateData(["*", "(+unofficial Japanese translation v5.0.2.0)"]));
 
     TranslateModule(
         "contribute", "寄付と貢献", TranslateData([
@@ -492,8 +492,8 @@ function TranslateSettings(){
             "よくある質問：RESについてさらに知るために /r/Enhancement wikiに移動します。",
             "You can improve RES with your code, designs, and ideas! RES is an open-source project on GitHub.",
             "開発：あなたのコード、デザイン、アイデアでRESをより良くすることができます！　RESはGitHub上で公開されているオープンソースプロジェクトです。",
-            "<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a> (<a target=\"_blank\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) and a slew of community members have contributed code, design and/or great ideas to RES.",
-            "貢献者：<a target=\"_blank\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a>氏 (<a target=\"_blank\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) とコミュニティのメンバーがRESのためにコード・デザイン・素晴らしいアイデアを提供してくれました。",
+            "<a target=\"_blank\" rel=\"noopener noreferer\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a> (<a target=\"_blank\" rel=\"noopener noreferer\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) and a slew of community members have contributed code, design and/or great ideas to RES.",
+            "貢献者：<a target=\"_blank\" rel=\"noopener noreferer\" href=\"http://www.honestbleeps.com/\">Steve Sobel</a>氏 (<a target=\"_blank\" rel=\"noopener noreferer\" href=\"/user/honestbleeps/\">/u/honestbleeps</a>) とコミュニティのメンバーがRESのためにコード・デザイン・素晴らしいアイデアを提供してくれました。",
             "Read about RES's privacy policy.",
             "プライバシー：RESのプライバシーポリシーを確認します。",
             "Reddit Enhancement Suite is released under the GPL v3.0 license.",
@@ -1125,6 +1125,10 @@ function TranslateSettings(){
             "スレッドの購読を自動停止するまでの日数。",
             "Show the Subscribe button?",
             "購読ボタンを表示するかどうか。",
+            "Monitor the number of comments on posts you have visited.",
+            "あなたが訪れた投稿のコメント数をモニターする。（コメントの新着数カウントの設定っぽい）",
+            "Monitor the number of comments on posts you have visited while browsing in incognito/private mode.",
+            "ブラウザがプライバシーモードの時、あなたが訪れた投稿のコメント数をモニターする。（コメントの新着数カウントの設定っぽい）",
         ])
     );
     TranslateModule(
@@ -1153,6 +1157,8 @@ function TranslateSettings(){
         "subredditInfo", "サブレディット情報", TranslateData([
             "Adds a hover tooltip to subreddits",
             "サブレディットにマウスオーバーした時にツールチップを表示する。",
+            "Should the popup appear only for direct /r/ links, or for all links to a subreddit?",
+            "/r/ でリンクしてある場合だけサブレディット情報をポップアップ表示する。（offの場合、それ以外の方法でリンクしたサブレディットでも表示する）",
             "Delay, in milliseconds, before hover tooltip loads. Default is 800.",
             "マウスオーバー時に情報を読み込むまでの待ち時間をミリ秒単位で指定。（初期値：800）",
             "Delay, in milliseconds, before hover tooltip fades away. Default is 200.",
@@ -1181,6 +1187,10 @@ function TranslateSettings(){
             "ショートカットの文字列に大文字を強制しないで小文字を許可する。",
             "Show last update information on the front page (work only if you have at least 50/100 subscription, see <a href=\"/r/help/wiki/faq#wiki_some_of_my_subreddits_keep_disappearing.__why.3F\">here</a> for more info).",
             "フロントページで最新更新情報を表示する。（通常アカウントでは50以上、goldアカウントでは100以上のサブレディットを購読している場合のみ効果があります。詳しくは <a href=\"/r/help/wiki/faq#wiki_some_of_my_subreddits_keep_disappearing.__why.3F\">ここ</a> を見てください。",
+            "Store the last time you visited a subreddit.",
+            "サブレディットを最後に訪れた日時を記憶する。",
+            "Store the last time you visited a subreddit in incognito/private mode.",
+            "ブラウザがプライバシーモードの時、サブレディットを最後に訪れた日時を記憶する。",
         ]),
         function() {
             TranslateDescriptionByRegExp(/show "([\w.]*)" (link|button) in subreddit manager/i, "トップバーに[$1]を表示する。");
@@ -1391,6 +1401,8 @@ function TranslateSettings(){
             "スコアが二つの閾値の間の値の場合、リンク・コメントスコアの色を滑らかに混ぜる。（10が黄・50が赤の場合、20は黄色っぽい橙・30は橙・40は赤っぽい橙といった感じになる）",
             "Add color to the \"controversial\" comment indicator.",
             "論争中のコメントに色を付ける。",
+            "This indicator can be enabled/disabled in your reddit preferences.",
+            "このインジケーターはredditの設定で有効/無効を切り替えられます。",
             "Select a color for the \"controversial\" comment indicator.",
             "論争中のコメントを示す色。",
             "score",
@@ -1623,9 +1635,9 @@ function TranslateSettings(){
         "singleClick", "シングルクリック", TranslateData([
             "Adds an [l+c] link that opens a link and the comments page in new tabs for you in one click.",
             "リンクとコメントを一回の操作で開く[l+c]リンクを表示します。リンクとコメントが同じページの場合は[l=c]リンクを表示します。",
-            "open comments then link ",
+            "open comments then link",
             "コメント→リンクの順に開く ",
-            "open link then comments ",
+            "open link then comments",
             "リンク→コメントの順に開く ",
             "What order to open the link/comments in.",
             "リンクとコメントを開く順番。",
@@ -1699,8 +1711,6 @@ function TranslateSettings(){
         "presets", "プリセット", TranslateData([
             "Select from various preset RES configurations. Each preset turns on or off various modules/options, but does not reset your entire configuration.",
             "RESの簡単設定ができます。いくつかの機能や設定をon/offしますが、全ての設定がリセットされるわけではありません。",
-            "apply preset",
-            "プリセットを適用",
             "RES Lite: just the popular stuff",
             "RESライト：定番の機能のみ。",
             "Turn off all the RES modules",
@@ -1709,6 +1719,10 @@ function TranslateSettings(){
             "通知とマウスオーバー時のポップアップを全て無効にする。",
             "Warning: This will remove all your RES settings, including tags, saved comments, filters etc!",
             "<b>警告：このボタンを押すとタグ・保存したコメント・フィルターなどを含む全てのRESの設定が削除されます！</b>",
+            "apply preset",
+            "プリセットを適用",
+            "Reset",
+            "リセット",
         ])
     );
     TranslateModule(
@@ -1839,16 +1853,16 @@ function TranslateDailyTip() {
 }
 
 function start() {
-	if(document.getElementById("RESClose")) {
-       TranslateSettings();
-	}
+    if(document.getElementById("RESClose")) {
+        TranslateSettings();
+    }
 
     if(document.getElementById("keyHelp")) {
-		TranslateKeyHelp();
+        TranslateKeyHelp();
     }
 
     if(document.getElementById("tip0")) {
-		TranslateDailyTip();
+        TranslateDailyTip();
     }
 
     setTimeout(start, 1000);
