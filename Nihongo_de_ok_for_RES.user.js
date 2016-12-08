@@ -2,7 +2,7 @@
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
 // @version      5.2.0.0
-// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v5.0.2対応）
+// @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v5.2.0対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
 // @include      https://*.reddit.com/*
