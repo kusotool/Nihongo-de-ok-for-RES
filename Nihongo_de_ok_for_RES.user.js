@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nihongo de ok for RES settings
 // @namespace    nihongo-de-ok-for-res-settings
-// @version      5.0.2.0
+// @version      5.2.0.0
 // @description  Reddit Enhancement Suite(RES)の設定画面を日本語に翻訳します（RES v5.0.2対応）
 // @author       kusotool
 // @include      http://*.reddit.com/*
@@ -29,6 +29,7 @@
 
 // Your code here...
 var resja_debug = false;
+var res_official_translated = false;
 var prev_url = "";
 var attr_translated = "translated_by_resja";
 var fTranslate = [];
@@ -204,12 +205,20 @@ var translate_data_keyhelp = TranslateData([
 ]);
 
 
-function TranslateCategory(en, jp) {
+function TranslateCategory(cat_id, jp) {
     var arrayTarget = document.getElementsByClassName("categoryButton");
     for(var i = 0; i < arrayTarget.length; i++){
         var target = arrayTarget[i];
-        if(target.getAttribute("data-category") === en){
-            target.innerHTML = jp + "<br>　" + target.innerHTML;
+        if(target.getAttribute("data-category") === "aboutCategory" && target.innerHTML === "RESについて"){
+            res_official_translated = true;
+        }
+        if(target.getAttribute("data-category") === cat_id){
+            if(res_official_translated){
+                target.innerHTML = jp;
+            }
+            else{
+                target.innerHTML = jp + "<br>　" + target.innerHTML;                
+            }
         }
     }
 }
@@ -219,7 +228,12 @@ function TranslateModule(en, jp, arrayRightPaneTranslateData, funcCustom) {
     for(var i = 0; i < arrayTarget.length; i++){
         var target = arrayTarget[i];
         if(target.getAttribute("data-module") === en){
-            target.innerHTML = jp + "<br>　" + target.innerHTML;
+            if(res_official_translated){
+                target.innerHTML = jp;
+            }
+            else{
+                target.innerHTML = jp + "<br>　" + target.innerHTML;
+            }
             fTranslate[en] = function(){
                 TranslateRightPane(arrayRightPaneTranslateData);
                 if(typeof(funcCustom) === "function") funcCustom();
@@ -378,22 +392,22 @@ function TranslateSettings(){
         return;
     }
 
-    TranslateCategory("About RES",    "RESについて"   );
-    TranslateCategory("My account",   "マイアカウント");
-    TranslateCategory("Users",        "ユーザー"      );
-    TranslateCategory("Comments",     "コメント"      );
-    TranslateCategory("Submissions",  "サブミッション");
-    TranslateCategory("Subreddits",   "サブレディット");
-    TranslateCategory("Appearance",   "見た目"        );
-    TranslateCategory("Browsing",     "ブラウジング"  );
-    TranslateCategory("Productivity", "生産性"        );
-    TranslateCategory("Core",         "コア"          );
+    TranslateCategory("aboutCategory",        "RESについて"   );
+    TranslateCategory("myAccountCategory",    "マイアカウント");
+    TranslateCategory("usersCategory",        "ユーザー"      );
+    TranslateCategory("commentsCategory",     "コメント"      );
+    TranslateCategory("submissionsCategory",  "サブミッション");
+    TranslateCategory("subredditsCategory",   "サブレディット");
+    TranslateCategory("appearanceCategory",   "見た目"        );
+    TranslateCategory("browsingCategory",     "ブラウジング"  );
+    TranslateCategory("productivityCategory", "生産性"        );
+    TranslateCategory("coreCategory",         "コア"          );
 
     Translate(document.getElementById("RESAllOptions"), TranslateData(["Show advanced options", "上級者向け設定を表示する"]));
     Translate(document.getElementById("noOptions"), TranslateData(["There are no configurable options for this module.", "この機能に他の設定はありません。"]));
     Translate(document.getElementById("keyCodeModal"), TranslateData(["Press a key (or combination with shift, alt and/or ctrl) to assign this action.", "キー（shift, alt, ctrl から一つまたは複数の同時押しも可）を登録できます"]));
     Translate(document.getElementById("alert_message"), TranslateData(["<div id=\"alert_message\" style=\"display: block;\"><div><p>Restoring a .resbackup file will <strong>permanently</strong> overwrite your current settings. Are you sure you want to do this?</p></div><input type=\"button\" value=\"confirm\" class=\"button-right\"><input type=\"button\" value=\"cancel\" class=\"button-right\"></div>", "きます"]));
-    Translate(document.getElementById("RESConsoleVersionDisplay"), TranslateData(["*", "(+unofficial Japanese translation v5.0.2.0)"]));
+    Translate(document.getElementById("RESConsoleVersionDisplay"), TranslateData(["*", "(+unofficial Japanese translation v5.2.0.0)"]));
 
     TranslateModule(
         "contribute", "寄付と貢献", TranslateData([
@@ -604,6 +618,8 @@ function TranslateSettings(){
             "投稿カルマ・コメントカルマの間に表示する区切り文字。",
             "Use commas for large karma numbers",
             "カルマの値が大きいとき、コンマを付加します。",
+            "Display gilded icon if current user has gold status",
+            "現在のユーザーがRedditゴールド会員ならgildedアイコン（金の★）を表示します",
         ])
     );
     TranslateModule(
@@ -750,8 +766,14 @@ function TranslateSettings(){
     );
     TranslateModule(
         "userTagger", "ユーザータグ", TranslateData([
-            "Adds a great deal of customization around users - tagging them, ignoring them, and more. You can manage tagged users on <a href=\"/r/Dashboard/#userTaggerContents\">Manage User Tags</a>.",
-            "<a href=\"/r/Dashboard/#userTaggerContents\">ユーザータグの設定</a> でユーザーに関する強力なカスタマイズ（タグ付与、無視、その他）を提供します。",
+            "Adds a great deal of customization around users - tagging them, ignoring them, and more. You can manage tagged users on <a href=\"/r/Dashboard/#userTaggerContents\">Manage User Tags</a>. <p><b>Ignoring users:</b> users will <i>not</i> be ignored in modmail, moderation queue or your inbox.</p>",
+            "<a href=\"/r/Dashboard/#userTaggerContents\">ユーザータグの設定</a> でユーザーに関する強力なカスタマイズ（タグ付与、無視、その他）を提供します。<br>（ユーザー無視はモデレーターメール、モデレーションキュー、受信箱では無効です。）",
+            "Always show a tag tool icon after every username.",
+            "各ユーザー名の後ろにツールアイコンを表示します。",
+            "Completely remove links and comments posted by ignored users. If an ignored comment has replies, collapse it and hide its contents instead of removing it.",
+            "無視したユーザーによるリンクとコメントの投稿を完全に除去します。無視したコメントに返信が付いている場合は折りたたんで非表示（クリックで表示可能）となります。",
+            "Provide a link to reveal an ignored link or comment. The hardIgnore option overrides this.",
+            "無視したリンクとコメントを見るボタンを表示します。Hard Ignore（完全無視）の設定が優先されます。",
             "When \"hard ignore\" is off, only post titles and comment text is hidden. When it is on, the entire post is hidden (or for comments, collapsed).",
             "offの場合はサブミッションのタイトルとコメントが隠されますが、「show anyway?（それでも表示する）」リンクをクリックすれば見ることができます。onにすると無視しているユーザーが投稿したサブミッションは完全に見えなくなり、コメントは非表示にしたうえで折り畳まれます。",
             "By default, store a link to the link/comment you tagged a user on",
@@ -960,6 +982,8 @@ function TranslateSettings(){
         "saveComments", "コメント保存", TranslateData([
             "You can save comments with RES: click the <em>save-RES</em> button below the comment. You can view these comments on your user page under the \"saved - RES\" tab (reddit.com/user/MyUsername/saved#comments). If you use <a class=\"\" href=\"#res:settings/keyboardNav\" title=\"RES Settings > Keyboard Navigation\">Keyboard Navigation</a>, you can press . to open the RES command line, then type in <code>me/sc</code> to see saved-RES comments. <br><br> Saving with RES saves a comment locally in your browser. This means that you can see the comment you saved <i>as it looked when you saved it</i>, even if it is later edited or deleted. You can save comments with RES if you are not logged in, or if you are logged in to any account—all the comments will be visible in one location. You will only be able to view saved RES comments on whichever browser you have RES installed on. <br><br> When saving comments with reddit, you must be logged into an account; the comment is saved specifically for that account; it won't be shown if you switch to a different account or log out. You can view these comments whenever you are logged into the reddit account you saved them from, including on other browsers or devices. <br><br> Visually, saving comments with reddit looks the same as saving with RES—but the text is not saved locally, so the saved comment text shows the <i>current</i> state of the comment. If the comment has been edited or deleted since you saved it, the text that displays on your account's \"saved\" page will look different then it looked when you saved it. <br><br> If you have <a href=\"/gold/about\">reddit gold</a> on an account, you can add a category/tag to comments you have saved with reddit, then filter saved comments/posts by category. (You cannot sort or filter comments saved with RES.)",
             "RESを使ってコメントを保存することができます。コメントの下にある<em>save-RES</em>ボタンをクリックすると保存され、\"saved - RES\"タブ(reddit.com/user/MyUsername/saved#comments)で見ることができます。<a class=\"\" href=\"#!settings/keyboardNav\" title=\"RES設定 > キーボード操作\">キーボード操作</a>が有効であれば場合は . （ドット）を押してコマンドラインを出した後 <code>me/sc</code> と入力することでも見ることができます。<br><br>RESを使って保存したコメントはブラウザに保存されるので保存時の環境（同じPC、同じブラウザ、RESがインストール済）でなければ読めません。しかしコメントが編集されたり削除されても保存時の状態が維持され、redditにログインしていなくても保存したり読んだりできます。<br><br>redditの機能でコメントを保存するにはログインしておく必要があります。サーバー側に保存されるので他のデバイスやブラウザからでもコメントを保存したユーザーでログインすれば読むことができます。コメントが編集されたり削除された場合は、保存したコメントもその影響を受けます。（コメントの内容ではなく、リンクを保存していると考えてください）<br><br>reddit goldアカウントを持っている場合は、そのアカウントで保存したコメントにカテゴリ・タグを追加することができ、それを利用してフィルターすることができます。（RESを使って保存したコメントではできません）",
+            "<p>To save comments with RES click the <em>save-RES</em> button below a comment. You can view saved comments on your user page under the <a href=\"/user/me/saved/#comments\">saved</a> tab. If you use <a class=\"\" href=\"#res:settings/keyboardNav\" title=\"RES Settings > キーボードナビゲーション\">キーボードナビゲーション</a>, you can press <code>.</code> to open the RES command line, then type in <code>me/sc</code> to see saved-RES comments.</p> <p>Saving with RES saves a comment locally in your browser. This means that you can view the comment you saved <i>as it looked when you saved it</i>, even if it is later edited or deleted. You can save comments with RES if you are not logged in, or if you are logged in to any account—all the comments will be visible in one location. You will only be able to view saved RES comments on whichever browser you have RES installed on.</p> <p>When saving comments with reddit, you must be logged into an account; the comment is saved specifically for that account; it won't be shown if you switch to a different account or log out. You can view these comments whenever you are logged into the reddit account you saved them from, including on other browsers or devices.</p> <p>Visually, saving comments with reddit looks the same as saving with RES—but the text is not saved locally, so the saved comment text shows the <i>current</i> state of the comment. If the comment has been edited or deleted since you saved it, the text that displays on your account's \"saved\" page will look different than it looked when you saved it.</p> <p>If you have <a href=\"/gold/about\">reddit gold</a> on an account, you can add a category/tag to comments you have saved with reddit, then filter saved comments/posts by category. (You cannot sort or filter comments saved with RES.)</p>",
+            "RESを使ってコメントを保存することができます。コメントの下にある<em>save-RES</em>ボタンをクリックすると保存され、\"saved - RES\"タブ(reddit.com/user/MyUsername/saved#comments)で見ることができます。<a class=\"\" href=\"#!settings/keyboardNav\" title=\"RES設定 > キーボード操作\">キーボード操作</a>が有効であれば場合は . （ドット）を押してコマンドラインを出した後 <code>me/sc</code> と入力することでも見ることができます。<br><br>RESを使って保存したコメントはブラウザに保存されるので保存時の環境（同じPC、同じブラウザ、RESがインストール済）でなければ読めません。しかしコメントが編集されたり削除されても保存時の状態が維持され、redditにログインしていなくても保存したり読んだりできます。<br><br>redditの機能でコメントを保存するにはログインしておく必要があります。サーバー側に保存されるので他のデバイスやブラウザからでもコメントを保存したユーザーでログインすれば読むことができます。コメントが編集されたり削除された場合は、保存したコメントもその影響を受けます。（コメントの内容ではなく、リンクを保存していると考えてください）<br><br>reddit goldアカウントを持っている場合は、そのアカウントで保存したコメントにカテゴリ・タグを追加することができ、それを利用してフィルターすることができます。（RESを使って保存したコメントではできません）",
         ])
     );
     TranslateModule(
@@ -1038,6 +1062,10 @@ function TranslateSettings(){
             "1ページの中で指定した割合（％）を超える内容がフィルター対象になった場合は通知を表示する。",
             "Add a quick NSFW on/off toggle to the gear menu",
             "歯車メニューにNSFWフィルターの切り替えボタンを表示する。",
+            "Show filterline controls by default",
+            "フィルターラインコントロールをデフォルトで表示する。",
+            "Don't filter your own posts",
+            "自分の投稿はフィルターしない。",
             "Show a 'filter visited links' tab at the top of each subreddit, to easily toggle whether to filter visited posts.",
             "'filter visited links'（既読リンクをフィルター） タブを各サブレディットのトップに表示する。",
             "When visiting the comments page for a filtered link, allow the link/expando to be shown",
@@ -1084,6 +1112,8 @@ function TranslateSettings(){
             "/r/all とドメインページ",
             "When browsing subreddit/multi-subreddit",
             "サブレディット/マルチレディットを見ているとき",
+            "When filtering subreddits with the above option, where should they be filtered?",
+            "上で設定したサブレディットフィルターを有効にする場所。",
             "+add filter",
             "+フィルターを追加",
             "+add subreddits",
